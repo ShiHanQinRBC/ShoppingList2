@@ -1,36 +1,33 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import React, {useState} from 'react'
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import Header from './my_components/Header';
+import ListItem from './my_components/ListItem';
+//import {uuid} from 'uuidv4';
+import { v4 as uuidv4} from 'uuid';
 
-import useCachedResources from './hooks/useCachedResources';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
-import LinkingConfiguration from './navigation/LinkingConfiguration';
-
-const Stack = createStackNavigator();
-
-export default function App(props) {
-  const isLoadingComplete = useCachedResources();
-
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <NavigationContainer linking={LinkingConfiguration}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer>
+const App = () => {
+  const [items, setItems] = useState([
+    {id: uuidv4(), text: 'Milk'},
+    {id: uuidv4(), text: 'Eggs'},
+    {id: uuidv4(), text: 'Bread'},
+    {id: uuidv4(), text: 'Juice'},
+  ]);
+  return (
+    <View style={styles.container}>
+      <Header />
+      <FlatList 
+        data={items} 
+        renderItem={({item}) => <ListItem item={item} />}
+      />
       </View>
-    );
-  }
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 1, 
+    paddingTop: 60, //Same as header height
   },
 });
+
+export default App;
